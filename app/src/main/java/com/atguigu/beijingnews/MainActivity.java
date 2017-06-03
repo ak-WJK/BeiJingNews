@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.atguigu.beijingnews.fragment.ContentFragment;
 import com.atguigu.beijingnews.fragment.LeftMenuFragment;
+import com.atguigu.beijingnews.utils.DensityUtil;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 
@@ -38,7 +39,7 @@ public class MainActivity extends SlidingFragmentActivity {
 
         slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
 
-        slidingMenu.setBehindOffset(800);
+        slidingMenu.setBehindOffset(DensityUtil.dip2px(MainActivity.this, 300));
     }
 
     private void initFragment() {
@@ -48,6 +49,15 @@ public class MainActivity extends SlidingFragmentActivity {
         fm.replace(R.id.fm_main, new ContentFragment(), MAIN_TAG);
 
         fm.commit();
+    }
+
+
+    //得到左侧菜单
+    public LeftMenuFragment getLeftMenuFragment() {
+
+        //根据tag到对象池中找到对应的fragment
+        return (LeftMenuFragment) getSupportFragmentManager().findFragmentByTag(LEFT_TAG);
+
     }
 
 }

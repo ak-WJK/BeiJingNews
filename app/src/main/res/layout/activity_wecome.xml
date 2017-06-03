@@ -3,7 +3,8 @@
     android:id="@+id/wecome_root_pager"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/splash_bg_newyear">
+    android:background="@drawable/splash_bg_newyear"
+    android:gravity="center">
 
     <ImageView
         android:layout_width="wrap_content"

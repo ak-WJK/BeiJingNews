@@ -52,7 +52,7 @@ public class GuideActivity extends AppCompatActivity {
 
 
         initData();
-//计算两个点之间的距离
+        //计算两个点之间的距离
         ivRedPoint.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
 
 
