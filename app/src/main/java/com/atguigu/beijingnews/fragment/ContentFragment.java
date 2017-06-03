@@ -77,6 +77,10 @@ public class ContentFragment extends BaseFragment {
 
     }
 
+    public NewsPager getNewsPager() {
+        return (NewsPager) pagers.get(1);
+    }
+
     class MyOnPageChangeListener implements ViewPager.OnPageChangeListener {
 
 

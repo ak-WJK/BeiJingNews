@@ -60,4 +60,8 @@ public class MainActivity extends SlidingFragmentActivity {
 
     }
 
+    public ContentFragment getContentFragment() {
+        //根据tag到对象池中找到对应的fragment
+        return (ContentFragment) getSupportFragmentManager().findFragmentByTag(MAIN_TAG);
+    }
 }

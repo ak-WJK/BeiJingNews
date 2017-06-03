@@ -14,7 +14,8 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="15dp"
         android:background="@null"
-        android:src="@drawable/img_menu" />
+        android:src="@drawable/img_menu"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/tv_title"
