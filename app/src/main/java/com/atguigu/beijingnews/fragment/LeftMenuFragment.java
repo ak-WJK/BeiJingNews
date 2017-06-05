@@ -43,16 +43,8 @@ public class LeftMenuFragment extends BaseFragment {
                 MainActivity mainActivity = (MainActivity) context;
                 mainActivity.getSlidingMenu().toggle();
 
-                //得到MainActivi
+                switchPager(prePosition);
 
-                //得到ContentFragment
-               ContentFragment contentFragment = mainActivity.getContentFragment();
-
-                //得到NewsPager
-               NewsPager newsPager = contentFragment.getNewsPager();
-
-                //切换
-                newsPager.swichPager(prePosition);
 
 
 
@@ -62,6 +54,7 @@ public class LeftMenuFragment extends BaseFragment {
         return listView;
 
     }
+
 
     @Override
     public void initData() {
@@ -73,18 +66,30 @@ public class LeftMenuFragment extends BaseFragment {
         this.data = data;
 
 
-
 //            NewsCenterBean.DataBean dataBean = data.get(i);
 //            String title = dataBean.getTitle();
 //
 //            Log.e("TAG", "title" + title);
 
-            adapter = new LeftMenuAdapter();
+        adapter = new LeftMenuAdapter();
 
-            listView.setAdapter(adapter);
+        listView.setAdapter(adapter);
 
+//        switchPager(prePosition);
 
+    }
 
+    private static void switchPager(int prePosition) {
+        //得到MainActivi
+        MainActivity mainActivity = (MainActivity) context;
+        //得到ContentFragment
+        ContentFragment contentFragment = mainActivity.getContentFragment();
+
+        //得到NewsPager
+        NewsPager newsPager = contentFragment.getNewsPager();
+
+        //切换
+        newsPager.swichPager(prePosition);
     }
 
     class LeftMenuAdapter extends BaseAdapter {

@@ -13,6 +13,7 @@ public class ConstantUtils {
       * 新闻中心的网络地址
       */
     public static final String NEWSCENTER_PAGER_URL = BASE_URL + "/static/api/news/categories.json";
+//    public static final String NEWSCENTER_PAGER_URL = BASE_URL + "http://182.92.5.3/web_home/static/api/news/categories.json";
 
 
 }

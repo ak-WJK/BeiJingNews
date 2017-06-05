@@ -73,6 +73,8 @@ public class ContentFragment extends BaseFragment {
         pagers.get(0).initData();
         //屏蔽第一次进入时主页面可侧滑出左侧菜单
         isEnableSliding(context, SlidingMenu.TOUCHMODE_NONE);
+
+
         rgMain.check(R.id.rb_home);
 
     }
@@ -98,6 +100,8 @@ public class ContentFragment extends BaseFragment {
             //得到MainActivity
             if (position == 1) {
                 isEnableSliding(context, SlidingMenu.TOUCHMODE_FULLSCREEN);
+
+
             } else {
                 isEnableSliding((MainActivity) context, SlidingMenu.TOUCHMODE_NONE);
             }

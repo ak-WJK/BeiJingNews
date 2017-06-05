@@ -1,7 +1,9 @@
 package com.atguigu.beijingnews.pager;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -18,9 +20,13 @@ import com.atguigu.beijingnews.detailpager.VoteMenuDetailPager;
 import com.atguigu.beijingnews.domain.NewsCenterBean;
 import com.atguigu.beijingnews.fragment.LeftMenuFragment;
 import com.atguigu.beijingnews.utils.ConstantUtils;
-import com.google.gson.Gson;
+import com.atguigu.beijingnews.utils.SPUtils;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +50,7 @@ public class NewsPager extends BasePager {
 
     }
 
+    @SuppressLint("WrongConstant")
     @Override
     public void initData() {
         super.initData();
@@ -59,6 +66,13 @@ public class NewsPager extends BasePager {
         textView.setTextColor(Color.BLACK);
 
         fl_content.addView(textView);
+        //获取数据
+        String saveJson = SPUtils.getString(context, "saveJson", "");
+        //解析数据
+        if (!TextUtils.isEmpty(saveJson)) {
+            paresJson(saveJson);
+        }
+
 
         getDataFromNet();
 
@@ -80,6 +94,8 @@ public class NewsPager extends BasePager {
                     @Override
                     public void onResponse(String response, int i) {
                         Log.e("TAG", "请求成功==" + response);
+                        //缓存数据
+                        SPUtils.saveString(context, "saveJson", response);
                         processData(response);
                     }
 
@@ -89,9 +105,12 @@ public class NewsPager extends BasePager {
 
     private void processData(String json) {
 
-        NewsCenterBean newsCenterBean = new Gson().fromJson(json, NewsCenterBean.class);
+//        NewsCenterBean newsCenterBean = new Gson().fromJson(json, NewsCenterBean.class);
 
-        Log.e("TAG", "解析成功了哦==" + newsCenterBean.getData().get(0).getChildren().get(0).getTitle());
+
+        NewsCenterBean newsCenterBean = paresJson(json);
+
+//        Log.e("TAG", "解析成功了哦==" + newsCenterBean.getData().get(0).getChildren().get(0).getTitle());
 
         datas = newsCenterBean.getData();
         MainActivity mainActivity = (MainActivity) context;
@@ -99,9 +118,8 @@ public class NewsPager extends BasePager {
         leftMenuFragment.setData(datas);
 
         //实例化详情页面
-
         basePagers = new ArrayList<>();
-        basePagers.add(new NewsMenuDetailPager(context));
+        basePagers.add(new NewsMenuDetailPager(context, datas.get(0).getChildren()));
         basePagers.add(new TopicMenuDetailPager(context));
         basePagers.add(new PhotosMenuDetailPager(context));
         basePagers.add(new InteractMenuDetailPager(context));
@@ -111,8 +129,9 @@ public class NewsPager extends BasePager {
 
     }
 
+
     public void swichPager(int position) {
-        MenuDetailBasePager pager = basePagers.get(position);
+        MenuDetailBasePager pager = basePagers.get(position);//得到每一个页面
         View rootView = pager.rootView;
 
         fl_content.removeAllViews();
@@ -123,4 +142,81 @@ public class NewsPager extends BasePager {
 
 
     }
+
+    private NewsCenterBean paresJson(String json) {
+
+        NewsCenterBean newsCenterBean = new NewsCenterBean();
+
+        try {
+
+            JSONObject jsonObject = new JSONObject(json);
+
+            datas = new ArrayList<>();
+            newsCenterBean.setData(datas);
+
+            int retcode = jsonObject.optInt("retcode");
+
+            newsCenterBean.setRetcode(retcode);
+
+            JSONArray data = jsonObject.optJSONArray("data");
+
+
+            for (int i = 0; i < data.length(); i++) {
+
+                NewsCenterBean.DataBean dataBean = new NewsCenterBean.DataBean();
+
+
+                JSONObject jsonObject1 = data.optJSONObject(i);
+
+                int id = jsonObject1.optInt("id");
+                dataBean.setId(id);
+
+                String title = jsonObject1.optString("title");
+                dataBean.setTitle(title);
+
+                String url = jsonObject1.optString("url");
+                dataBean.setUrl(url);
+
+                int type = jsonObject1.optInt("type");
+                dataBean.setType(type);
+
+
+                JSONArray children = jsonObject1.optJSONArray("children");
+
+                if (children != null) {
+
+                    List<NewsCenterBean.DataBean.ChildrenBean> childrenBeans = new ArrayList<>();
+
+                    dataBean.setChildren(childrenBeans);
+
+                    for (int i1 = 0; i1 < children.length(); i1++) {
+
+                        JSONObject jsonObject2 = children.optJSONObject(i1);
+
+                        NewsCenterBean.DataBean.ChildrenBean childrenBean = new NewsCenterBean.DataBean.ChildrenBean();
+
+
+                        childrenBean.setId(jsonObject2.optInt("id"));
+                        childrenBean.setTitle(jsonObject2.optString("title"));
+                        childrenBean.setType(jsonObject2.optInt("type"));
+                        childrenBean.setUrl(jsonObject2.optString("url"));
+
+                        childrenBeans.add(childrenBean);
+                    }
+                }
+
+                datas.add(dataBean);
+
+            }
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        return newsCenterBean;
+    }
+
+
 }
