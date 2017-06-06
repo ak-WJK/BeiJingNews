@@ -1,12 +1,17 @@
 package com.atguigu.beijingnews.detailpager;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -111,6 +116,15 @@ public class TabDetailPager extends MenuDetailBasePager {
             @Override
             public void onPageScrollStateChanged(int state) {
 
+                if (state == ViewPager.SCROLL_STATE_DRAGGING) {
+                    //消息移除
+                    handler.removeCallbacksAndMessages(null);
+                } else if (state == ViewPager.SCROLL_STATE_IDLE) {
+                    //发消息
+                    handler.removeCallbacksAndMessages(null);
+                    handler.postDelayed(new MyRunnable(), 4000);
+                }
+
             }
         });
 
@@ -140,14 +154,13 @@ public class TabDetailPager extends MenuDetailBasePager {
 
                     newsAdapter.notifyDataSetChanged();
 
-
-                    String url = newsBeans.get(clickPosition).getUrl();
-                    Intent intent = new Intent(context, NewsDetailActivity.class);
-                    intent.putExtra("url", url);
-                    context.startActivity(intent);
-
-
                 }
+
+
+                String url = ConstantUtils.BASE_URL + newsBeans.get(clickPosition).getUrl();
+                Intent intent = new Intent(context, NewsDetailActivity.class);
+                intent.setData(Uri.parse(url));
+                context.startActivity(intent);
 
             }
         });
@@ -161,10 +174,11 @@ public class TabDetailPager extends MenuDetailBasePager {
     public void initData() {
         super.initData();
         url = ConstantUtils.BASE_URL + childrenBean.getUrl();
-        Log.e("TAG", "url==" + url);
+//        Log.e("TAG", "url==" + url);
         //设置数据
         getDataFromNet();
     }
+
 
     private void getDataFromNet() {
         OkHttpUtils
@@ -190,6 +204,34 @@ public class TabDetailPager extends MenuDetailBasePager {
 
                 });
     }
+
+
+    private MessageHandler handler;
+
+    class MessageHandler extends Handler {
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+
+            int item = (viewpager.getCurrentItem() + 1) % topnewsBeans.size();
+
+            viewpager.setCurrentItem(item);
+
+            handler.postDelayed(new MyRunnable(), 4000);
+        }
+    }
+
+    class MyRunnable implements Runnable {
+
+        @Override
+        public void run() {
+
+            handler.sendEmptyMessage(0);
+
+        }
+    }
+
 
     private void processData(String response) {
         TabDetailPagerBean bean = new Gson().fromJson(response, TabDetailPagerBean.class);
@@ -231,7 +273,16 @@ public class TabDetailPager extends MenuDetailBasePager {
         lv.setAdapter(newsAdapter);
 
 
+        if (handler == null) {
+            handler = new MessageHandler();
+        }
+
+        handler.removeCallbacksAndMessages(null);
+        handler.postDelayed(new MyRunnable(), 4000);
+
+
     }
+
 
     class NewsAdapter extends BaseAdapter {
 
@@ -310,6 +361,7 @@ public class TabDetailPager extends MenuDetailBasePager {
     class MyAdapter extends PagerAdapter {
 
 
+        @SuppressLint("ClickableViewAccessibility")
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             ImageView imageView = new ImageView(context);
@@ -325,6 +377,30 @@ public class TabDetailPager extends MenuDetailBasePager {
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(imageView);
             container.addView(imageView);
+
+
+            imageView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN://按下的时候移除消息
+                            handler.removeCallbacksAndMessages(null);
+                            Log.e("TAG", "onTouch--ACTION_DOWN==");
+                            break;
+
+                        case MotionEvent.ACTION_UP://离开的时候重新发消息
+                            handler.postDelayed(new MyRunnable(), 4000);
+                            Log.e("TAG", "--onTouch--ACTION_UP==");
+
+                            break;
+                    }
+
+
+                    return true;
+                }
+            });
+
+
             return imageView;
         }
 

@@ -18,6 +18,7 @@ public class BasePager {
     public TextView tv_title;
     public ImageButton ib_menu;
     public FrameLayout fl_content;
+    public ImageButton ib_list_andgrid;
 
     public Context context;
     public View rootView;
@@ -28,6 +29,8 @@ public class BasePager {
         tv_title = (TextView) rootView.findViewById(R.id.tv_title);
         ib_menu = (ImageButton) rootView.findViewById(R.id.ib_menu);
 
+        ib_list_andgrid = (ImageButton) rootView.findViewById(R.id.ib_list_andgrid);
+
         fl_content = (FrameLayout) rootView.findViewById(R.id.fl_content);
 
         ib_menu.setOnClickListener(new View.OnClickListener() {
@@ -36,6 +39,7 @@ public class BasePager {
                 ((MainActivity) context).getSlidingMenu().toggle();
             }
         });
+
 
     }
 

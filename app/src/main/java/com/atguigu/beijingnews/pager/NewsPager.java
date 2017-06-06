@@ -121,7 +121,7 @@ public class NewsPager extends BasePager {
         basePagers = new ArrayList<>();
         basePagers.add(new NewsMenuDetailPager(context, datas.get(0).getChildren()));
         basePagers.add(new TopicMenuDetailPager(context));
-        basePagers.add(new PhotosMenuDetailPager(context));
+        basePagers.add(new PhotosMenuDetailPager(context, datas.get(2)));
         basePagers.add(new InteractMenuDetailPager(context));
         basePagers.add(new VoteMenuDetailPager(context));
 
@@ -130,8 +130,13 @@ public class NewsPager extends BasePager {
     }
 
 
-    public void swichPager(int position) {
-        MenuDetailBasePager pager = basePagers.get(position);//得到每一个页面
+    @SuppressLint("WrongConstant")
+    public void swichPager(final int position) {
+
+        //设置标题
+        tv_title.setText(datas.get(position).getTitle());
+
+        final MenuDetailBasePager pager = basePagers.get(position);//得到每一个页面
         View rootView = pager.rootView;
 
         fl_content.removeAllViews();
@@ -139,6 +144,23 @@ public class NewsPager extends BasePager {
         fl_content.addView(rootView);
 
         pager.initData();
+
+
+        //显示图片页面的按钮
+        if (position == 2) {
+            ib_list_andgrid.setVisibility(View.VISIBLE);
+
+            ib_list_andgrid.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PhotosMenuDetailPager photosPager = (PhotosMenuDetailPager) basePagers.get(2);
+                    photosPager.setSwitchPager(ib_list_andgrid);
+                }
+            });
+
+        } else {
+            ib_list_andgrid.setVisibility(View.GONE);
+        }
 
 
     }

@@ -26,4 +26,47 @@
         android:textColor="@android:color/white"
         android:textSize="23sp" />
 
+    <ImageButton
+        android:id="@+id/ib_title_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/back"
+        android:visibility="gone" />
+
+    <ImageButton
+        android:id="@+id/ib_title_textsize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="55dp"
+        android:background="@drawable/icon_textsize"
+        android:visibility="gone" />
+
+    <ImageButton
+        android:id="@+id/title_shared"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/icon_share"
+        android:visibility="gone" />
+
+
+    <ImageButton
+        android:id="@+id/ib_list_andgrid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/list_grid_select"
+        android:visibility="gone" />
+
 </RelativeLayout>

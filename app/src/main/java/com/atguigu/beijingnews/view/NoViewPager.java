@@ -25,5 +25,9 @@ public class NoViewPager extends ViewPager {
     }
 
 
-
+//    @Override
+//    public boolean dispatchTouchEvent(MotionEvent ev) {
+//        getParent().requestDisallowInterceptTouchEvent(true);
+//        return super.dispatchTouchEvent(ev);
+//    }
 }

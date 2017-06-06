@@ -63,8 +63,6 @@ public class NewsMenuDetailPager extends MenuDetailBasePager {
         });
 
 
-
-
         return view;
     }
 
