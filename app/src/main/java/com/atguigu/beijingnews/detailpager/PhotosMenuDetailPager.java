@@ -2,6 +2,7 @@ package com.atguigu.beijingnews.detailpager;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -39,9 +40,12 @@ public class PhotosMenuDetailPager extends MenuDetailBasePager {
     RecyclerView recyclerview;
     @BindView(R.id.progress)
     ProgressBar progress;
+    @BindView(R.id.refresh_layout)
+    SwipeRefreshLayout refreshLayout;
     private ImageButton switchPager;
     private PhotosAdapter adapter;
     private List<PhotosBean.DataBean.NewsBean> newsBeans;
+    private String url;
 
 
     public PhotosMenuDetailPager(Context context, NewsCenterBean.DataBean dataBean) {
@@ -54,16 +58,30 @@ public class PhotosMenuDetailPager extends MenuDetailBasePager {
     public View initView() {
         View view = View.inflate(context, R.layout.photos_detail_layout, null);
         ButterKnife.bind(this, view);
+
+
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                requestNetwork(url);
+            }
+        });
+
+        refreshLayout.setDistanceToTriggerSync(200);
         return view;
     }
 
 
     @Override
     public void initData() {
+        url = ConstantUtils.BASE_URL + dataBean.getUrl();
+//        Log.e("TAG", "url==" + url);
+        requestNetwork(url);
 
-        String url = ConstantUtils.BASE_URL + dataBean.getUrl();
 
-        Log.e("TAG", "url==" + url);
+    }
+
+    private void requestNetwork(String url) {
         OkHttpUtils.get()
                 .url(url)
                 .build()
@@ -81,8 +99,6 @@ public class PhotosMenuDetailPager extends MenuDetailBasePager {
 
                     }
                 });
-
-
     }
 
     @SuppressLint("WrongConstant")
@@ -102,6 +118,10 @@ public class PhotosMenuDetailPager extends MenuDetailBasePager {
 
         //设置布局管理器
         recyclerview.setLayoutManager(new LinearLayoutManager(context, LinearLayout.VERTICAL, false));
+
+        //设置刷新隐藏
+        refreshLayout.setRefreshing(false);
+
 
     }
 
