@@ -6,8 +6,11 @@ import android.support.v4.app.FragmentTransaction;
 import com.atguigu.beijingnews.fragment.ContentFragment;
 import com.atguigu.beijingnews.fragment.LeftMenuFragment;
 import com.atguigu.beijingnews.utils.DensityUtil;
+import com.atguigu.beijingnews.utils.SPUtils;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
+
+import static com.atguigu.beijingnews.detailpager.TabDetailPager.JILU_DIANJI;
 
 
 public class MainActivity extends SlidingFragmentActivity {
@@ -63,5 +66,15 @@ public class MainActivity extends SlidingFragmentActivity {
     public ContentFragment getContentFragment() {
         //根据tag到对象池中找到对应的fragment
         return (ContentFragment) getSupportFragmentManager().findFragmentByTag(MAIN_TAG);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        String clickArr = SPUtils.getString(MainActivity.this, JILU_DIANJI, "");
+        clickArr = "";
+        SPUtils.saveString(MainActivity.this, JILU_DIANJI, clickArr);
+
     }
 }

@@ -1,12 +1,15 @@
 package com.atguigu.beijingnews.detailpager;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -14,11 +17,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.atguigu.beijingnews.R;
+import com.atguigu.beijingnews.activity.NewsDetailActivity;
 import com.atguigu.beijingnews.base.MenuDetailBasePager;
 import com.atguigu.beijingnews.domain.NewsCenterBean;
 import com.atguigu.beijingnews.domain.TabDetailPagerBean;
 import com.atguigu.beijingnews.utils.ConstantUtils;
 import com.atguigu.beijingnews.utils.DensityUtil;
+import com.atguigu.beijingnews.utils.SPUtils;
 import com.atguigu.beijingnews.view.HorizontalScrollViewPager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -32,14 +37,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import okhttp3.Call;
 
-;
-
 /**
  * Created by Administrator on 2017/6/5.
  */
 
 public class TabDetailPager extends MenuDetailBasePager {
 
+    public static final String JILU_DIANJI = "jilu_dianji";
     private final NewsCenterBean.DataBean.ChildrenBean childrenBean;
 
     HorizontalScrollViewPager viewpager;
@@ -113,6 +117,41 @@ public class TabDetailPager extends MenuDetailBasePager {
 
         //把viewpager添加到listView的头
         lv.addHeaderView(listTopView);
+
+
+        //设置Item的点击事件
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+//                //得到位置
+                int clickPosition = position - 1;
+
+
+                String clickArr = SPUtils.getString(context, JILU_DIANJI, "");
+
+                int clickId = newsBeans.get(clickPosition).getId();
+                if (!clickArr.contains(clickId + "")) {
+
+                    clickArr = clickArr + clickId + ",";
+
+                    SPUtils.saveString(context, JILU_DIANJI, clickArr);
+
+                    newsAdapter.notifyDataSetChanged();
+
+
+                    String url = newsBeans.get(clickPosition).getUrl();
+                    Intent intent = new Intent(context, NewsDetailActivity.class);
+                    intent.putExtra("url", url);
+                    context.startActivity(intent);
+
+
+                }
+
+            }
+        });
+
 
         return view;
     }
@@ -238,6 +277,14 @@ public class TabDetailPager extends MenuDetailBasePager {
                     .placeholder(R.drawable.news_pic_default)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(viewHolder.ivIcon);
+
+
+            String clickArr = SPUtils.getString(context, JILU_DIANJI, "");
+            if (!clickArr.contains(bean.getId() + "")) {
+                viewHolder.tvListContent.setTextColor(Color.BLACK);
+            } else {
+                viewHolder.tvListContent.setTextColor(Color.GRAY);
+            }
 
 
             return convertView;
