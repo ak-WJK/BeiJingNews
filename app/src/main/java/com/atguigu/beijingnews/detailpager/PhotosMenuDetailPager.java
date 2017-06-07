@@ -78,7 +78,6 @@ public class PhotosMenuDetailPager extends MenuDetailBasePager {
 //        Log.e("TAG", "url==" + url);
         requestNetwork(url);
 
-
     }
 
     private void requestNetwork(String url) {

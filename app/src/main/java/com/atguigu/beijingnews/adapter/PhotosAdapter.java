@@ -1,6 +1,8 @@
 package com.atguigu.beijingnews.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.atguigu.beijingnews.R;
+import com.atguigu.beijingnews.activity.PicassoSampleActivity;
 import com.atguigu.beijingnews.domain.PhotosBean;
 import com.atguigu.beijingnews.utils.ConstantUtils;
 import com.bumptech.glide.Glide;
@@ -43,8 +46,8 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.MyViewHodl
     }
 
     @Override
-    public void onBindViewHolder(MyViewHodler myViewHodler, int position) {
-        PhotosBean.DataBean.NewsBean newsBean = newsBeans.get(position);
+    public void onBindViewHolder(MyViewHodler myViewHodler, final int position) {
+        final PhotosBean.DataBean.NewsBean newsBean = newsBeans.get(position);
         myViewHodler.tvPhotoContent.setText(newsBean.getTitle());
 
         //3.设置点击事件
@@ -55,6 +58,20 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.MyViewHodl
                 .error(R.drawable.pic_item_list_default)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(myViewHodler.ivPhoto);
+
+
+        myViewHodler.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String url = ConstantUtils.BASE_URL+newsBean.getListimage();
+                Intent intent = new Intent(context, PicassoSampleActivity.class);
+                intent.setData(Uri.parse(url));
+                context.startActivity(intent);
+
+            }
+        });
+
 
     }
 
@@ -74,6 +91,8 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.MyViewHodl
             ButterKnife.bind(this, itemView);
 
         }
+
+
     }
 
 
