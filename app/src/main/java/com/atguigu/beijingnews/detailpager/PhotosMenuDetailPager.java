@@ -108,7 +108,7 @@ public class PhotosMenuDetailPager extends MenuDetailBasePager {
         if (newsBeans.size() != 0) {
             progress.setVisibility(View.GONE);
 
-            adapter = new PhotosAdapter(context, newsBeans);
+            adapter = new PhotosAdapter(context, newsBeans,recyclerview);
 
             recyclerview.setAdapter(adapter);
         } else {

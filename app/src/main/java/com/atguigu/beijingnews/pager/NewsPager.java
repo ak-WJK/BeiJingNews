@@ -120,7 +120,7 @@ public class NewsPager extends BasePager {
         //实例化详情页面
         basePagers = new ArrayList<>();
         basePagers.add(new NewsMenuDetailPager(context, datas.get(0).getChildren()));
-        basePagers.add(new TopicMenuDetailPager(context));
+        basePagers.add(new TopicMenuDetailPager(context , datas.get(0).getChildren()));
         basePagers.add(new PhotosMenuDetailPager(context, datas.get(2)));
         basePagers.add(new InteractMenuDetailPager(context));
         basePagers.add(new VoteMenuDetailPager(context));
